@@ -1,0 +1,17 @@
+
+:root {
+    --cor-primaria: #00adf7;
+    --cor-secundaria: #1a96b8;
+}
+
+
+/* CSS RESET */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    text-decoration: none;
+    font-family: "Noto Sans", sans-serif;
+}
+
