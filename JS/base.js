@@ -20,3 +20,24 @@ function sairDoSistema(){
     localStorage.removeItem('usuario');
     window.open('login.html' , '_self');
 }
+
+function usuarioEstaLogado(){
+    let token = obterToken();
+
+    return token ? true : false;
+}
+
+// function validarUsuarioAutenticado(){
+//     let logado = usuarioEstaLogado();
+
+//     if (window.location.pathname == '/login.html'){
+//         if(logado)
+//             window.open('controle-produtos.html', '_self');
+//     } else {
+//         if(!logado){
+//             window.open('login.html','_self');
+//         }
+//     }
+// }
+
+// validarUsuarioAutenticado();

@@ -30,7 +30,7 @@ inicializarloja = () => {
         <div class="produto-single">
         <img src="`+ val.img+`" />
         <p>`+val.nome+`</p>
-        <a key="`+val.id+`" href="#" onclick="alert('Você adicionou ${val.nome} no Carrinho!')">Adicionar ao carrinho</a>
+        <a key="`+val.id+`"href="#" onclick="alert('Você adicionou ${val.nome} no Carrinho!')">Adicionar ao carrinho</a>
         </div>
 
         `;

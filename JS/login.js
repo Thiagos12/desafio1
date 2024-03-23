@@ -5,10 +5,12 @@ let campoEmail = document.querySelector("#email");
 let campoSenha = document.querySelector("#senha");
 let btnentrar = document.getElementById('btn-entrar');
 
+
 btnentrar.addEventListener("click", () =>  {
     // Capiturando os valores digitados pelo usuario
     let emaildigitado = campoEmail.value.toLowerCase();
     let senhadigitada = campoSenha.value;
+
 
     autenticar(emaildigitado, senhadigitada);
     

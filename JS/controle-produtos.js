@@ -5,7 +5,10 @@ let btnAdicionar = document.querySelector('#btn-adicionar');
 let tabelaProduto = document.querySelector('table>tbody');
 let modalProduto = new bootstrap.Modal(document.getElementById('modal-produto'));
 
+let modoEdicao = false;
+
 let formModal = {
+    titulo: document.querySelector('h4.modal-title'),
     id: document.querySelector("#id"),
     nome: document.querySelector("#produto"),
     valor: document.querySelector("#valor"),
@@ -34,7 +37,10 @@ function obterProdutos(){
 }
 
 btnAdicionar.addEventListener('click', ()=>{
-    limparModalCliente();
+    modoEdicao = false;
+    formModal.titulo.textContent = "Adicionar Produto";
+
+    limparModalProduto();
     modalProduto.show();
 });
 
@@ -88,12 +94,52 @@ formModal.btnSalvar.addEventListener('click', () =>{
      let produto = obterProdutoDoModal();
 
      if(!produto.validar()){
-        alert("Todos os Campos são Obrigatórios.")
+        
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Todos os Campos são Obrigatórios!",
+          });
         return;
      }
 
-     adicionarProdutoNoBackend(produto);
+     if(modoEdicao){
+        atualizarProdutoNoBackend(produto);
+     }else{
+        adicionarProdutoNoBackend(produto);
+     }
+     
 });
+
+function atualizarProdutoNoBackend(produto){
+    fetch(`${URL}/${produto.id}`, {
+        method: 'PUT',
+        headers:{
+            Authorization: obterToken(),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(produto)
+    })
+    .then (() => {
+        atualizarProdutoNaTela(produto);
+
+        Swal.fire({
+            title: "Atualizado com Sucesso",
+            text: `Produto ${produto.nome}, atualizado com Sucesso!`,
+            icon: "success"
+          });
+
+        modalProduto.hide()
+    })
+}
+
+function atualizarProdutoNaTela(produto){
+    let indice = listaDeProdutos.findIndex(p => p.id == produto.id);
+
+    listaDeProdutos.splice(indice, 1, produto);
+
+    popularTabela(listaDeProdutos);
+}
 
 function obterProdutoDoModal(){
     return new Produto({
@@ -126,18 +172,42 @@ function adicionarProdutoNoBackend(produto){
 
         modalProduto.hide();
 
-        alert(`Produto ${produto.nome}, foi cadastrado com sucesso!`)
+        Swal.fire({
+            title: "Cadastrado com Sucesso",
+            text: `Produto ${produto.nome}, foi cadastrado com sucesso!`,
+            icon: "success"
+          });
 
     })
 }
 
-function limparModalCliente() {
+function limparModalProduto() {
     formModal.id.value = '';
     formModal.nome.value = '';
     formModal.valor.value= '';
     formModal.quantidadeEstoque.value='';
     formModal.observacao.value ='';
     formModal.dataCadastro.value = '';
+}
+
+function editarProduto(id){
+    modoEdicao = true;
+    formModal.titulo.textContent = "Editar Produto";
+
+    let produto = listaDeProdutos.find(p => p.id == id);
+
+    atualizarModalProduto(produto);
+
+    modalProduto.show();
+}
+
+function atualizarModalProduto(produto){
+    formModal.id.value = produto.id;
+    formModal.nome.value = produto.nome;
+    formModal.valor.value =  produto.valor;
+    formModal.quantidadeEstoque.value = produto.quantidadeEstoque;
+    formModal.observacao.value = produto.observacao;
+    formModal.dataCadastro.value =  produto.dataCadastro.substring(0,10);
 }
 
 function excluirProduto(id){
